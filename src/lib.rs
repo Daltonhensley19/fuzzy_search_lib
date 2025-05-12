@@ -104,11 +104,27 @@ fn find_closest_str<'a>(arg: &'a str, reference_strs: &'a [String]) -> String {
     closest_str.clone()
 }
 
-struct FuzzySearcher {
+pub struct FuzzySearcher {
     corpus: Vec<String>,
 }
 
 impl FuzzySearcher {
+    /// Creates a new `FuzzySearcher` instance by loading a corpus from a specified file path.
+    ///
+    /// The corpus is expected to be a newline-separated file containing words or strings.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - A path to the file containing the corpus.
+    ///
+    /// # Returns
+    ///
+    /// A `Result` containing the `FuzzySearcher` instance if successful, or a `FuzzySearchError` if an error occurs.
+    ///
+    /// # Errors
+    ///
+    /// Returns `FuzzySearchError` if the corpus file cannot be opened or read.
+
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self, FuzzySearchError> {
         let corpus_path = path::Path::new("corpus/words.txt");
         let corpus = load_corpus(corpus_path)?;
@@ -116,6 +132,9 @@ impl FuzzySearcher {
         Ok(Self { corpus })
     }
 
+    /// Searches the corpus for the string closest to the given argument string.
+    ///
+    /// Returns the closest string from the corpus.
     pub fn search(&self, arg: &str) -> String {
         find_closest_str(arg, &self.corpus)
     }
